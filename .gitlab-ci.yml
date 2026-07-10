@@ -1,0 +1,178 @@
+# ============================================================
+# GitLab CI/CD Pipeline - Portal Layanan Publik Mobile
+# Flutter Android Build Pipeline
+# ============================================================
+
+# Variabel global yang digunakan di seluruh pipeline
+variables:
+  FLUTTER_VERSION: "3.32.0"
+  ANDROID_SDK_ROOT: "/opt/android-sdk"
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  PUB_CACHE: "$CI_PROJECT_DIR/.pub-cache"
+
+# Urutan stage yang akan dijalankan
+stages:
+  - setup
+  - validate
+  - test
+  - build
+
+# ============================================================
+# CACHE: Mempercepat pipeline dengan menyimpan dependencies
+# ============================================================
+.flutter_cache: &flutter_cache
+  cache:
+    key:
+      files:
+        - pubspec.lock
+    paths:
+      - .pub-cache/
+      - .dart_tool/
+    policy: pull-push
+
+# ============================================================
+# TEMPLATE: Base job untuk semua Flutter job
+# ============================================================
+.flutter_base:
+  image: ghcr.io/cirruslabs/flutter:stable
+  <<: *flutter_cache
+  before_script:
+    - flutter --version
+    - flutter pub get
+
+# ============================================================
+# STAGE 1: SETUP
+# ============================================================
+setup:dependencies:
+  extends: .flutter_base
+  stage: setup
+  script:
+    - echo "✅ Flutter version:"
+    - flutter --version
+    - echo "📦 Installing dependencies..."
+    - flutter pub get
+    - echo "✅ Dependencies installed successfully!"
+  artifacts:
+    paths:
+      - .pub-cache/
+    expire_in: 1 hour
+
+# ============================================================
+# STAGE 2: VALIDATE
+# ============================================================
+validate:analyze:
+  extends: .flutter_base
+  stage: validate
+  script:
+    - echo "🔍 Running Flutter Analyze..."
+    - flutter analyze --no-fatal-infos
+    - echo "✅ Analyze passed!"
+  allow_failure: false
+
+validate:format:
+  extends: .flutter_base
+  stage: validate
+  script:
+    - echo "🎨 Checking code formatting..."
+    - dart format --output=none --set-exit-if-changed lib/ test/
+    - echo "✅ Code format OK!"
+  allow_failure: true
+
+# ============================================================
+# STAGE 3: TEST
+# ============================================================
+test:unit:
+  extends: .flutter_base
+  stage: test
+  script:
+    - echo "🧪 Running Unit & Widget Tests..."
+    - flutter test --coverage
+    - echo "✅ All tests passed!"
+  coverage: '/lines\s*:\s*(\d+\.\d+)%/'
+  artifacts:
+    paths:
+      - coverage/
+    expire_in: 1 week
+  allow_failure: false
+
+# ============================================================
+# STAGE 4: BUILD
+# ============================================================
+
+# Build Android APK (Debug) - untuk testing internal
+build:android:debug:
+  extends: .flutter_base
+  stage: build
+  script:
+    - echo "🤖 Building Android APK (Debug)..."
+    - flutter build apk --debug
+    - echo "✅ Debug APK built successfully!"
+    - ls -la build/app/outputs/flutter-apk/
+  artifacts:
+    name: "portal-yanlik-debug-$CI_COMMIT_SHORT_SHA"
+    paths:
+      - build/app/outputs/flutter-apk/app-debug.apk
+    expire_in: 3 days
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop" || $CI_MERGE_REQUEST_ID'
+
+# Build Android APK (Release) - dengan keystore signing
+build:android:release:
+  extends: .flutter_base
+  stage: build
+  script:
+    - echo "🚀 Building Android APK (Release)..."
+    - |
+      if [ -n "$KEYSTORE_BASE64" ]; then
+        echo "$KEYSTORE_BASE64" | base64 -d > android/app/keystore.jks
+        echo "storePassword=$KEY_STORE_PASSWORD"    > android/key.properties
+        echo "keyPassword=$KEY_PASSWORD"           >> android/key.properties
+        echo "keyAlias=$KEY_ALIAS"                 >> android/key.properties
+        echo "storeFile=keystore.jks"              >> android/key.properties
+        echo "✅ Keystore configured!"
+      else
+        echo "⚠️  No keystore found, building unsigned APK..."
+      fi
+    - flutter build apk --release
+    - echo "✅ Release APK built!"
+    - ls -la build/app/outputs/flutter-apk/
+  artifacts:
+    name: "portal-yanlik-release-$CI_COMMIT_TAG"
+    paths:
+      - build/app/outputs/flutter-apk/app-release.apk
+    expire_in: 30 days
+  rules:
+    - if: '$CI_COMMIT_TAG'
+
+# Build Android App Bundle (AAB) - untuk Google Play Store
+build:android:bundle:
+  extends: .flutter_base
+  stage: build
+  script:
+    - echo "📦 Building Android App Bundle (AAB)..."
+    - flutter build appbundle --release
+    - echo "✅ App Bundle built!"
+    - ls -la build/app/outputs/bundle/release/
+  artifacts:
+    name: "portal-yanlik-bundle-$CI_COMMIT_TAG"
+    paths:
+      - build/app/outputs/bundle/release/app-release.aab
+    expire_in: 30 days
+  rules:
+    - if: '$CI_COMMIT_TAG'
+
+# Build Web
+build:web:
+  extends: .flutter_base
+  stage: build
+  script:
+    - echo "🌐 Building Flutter Web..."
+    - flutter build web --release
+    - echo "✅ Web build done!"
+  artifacts:
+    name: "portal-yanlik-web-$CI_COMMIT_SHORT_SHA"
+    paths:
+      - build/web/
+    expire_in: 7 days
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"'
