@@ -28,15 +28,25 @@ class ProfileInfoCard extends StatelessWidget {
                 height: 60,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: NetworkImage(avatarUrl),
-                    fit: BoxFit.cover,
-                  ),
+                  color: AppColors.backgroundSecondary,
+                  image: avatarUrl.isNotEmpty
+                      ? DecorationImage(
+                          image: NetworkImage(avatarUrl),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
                   border: Border.all(
                     color: AppColors.strokePrimary,
                     width: 1,
                   ),
                 ),
+                child: avatarUrl.isEmpty
+                    ? const Icon(
+                        Icons.person,
+                        color: AppColors.contentSecondary,
+                        size: 32,
+                      )
+                    : null,
               ),
               Positioned(
                 bottom: 0,

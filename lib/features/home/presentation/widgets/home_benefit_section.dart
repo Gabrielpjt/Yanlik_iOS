@@ -206,7 +206,7 @@ class _HomeBenefitSectionState extends State<HomeBenefitSection>
 
   Widget _buildBenefitCards() {
     return SizedBox(
-      height: 148,
+      height: 160,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: _benefits.length,
@@ -232,7 +232,7 @@ class _HomeBenefitSectionState extends State<HomeBenefitSection>
 
   Widget _buildDocumentCards() {
     return SizedBox(
-      height: 110,
+      height: 124,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: _documents.length,

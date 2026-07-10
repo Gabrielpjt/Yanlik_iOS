@@ -7,13 +7,28 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:portal_layanan_publik_mobile/app/app.dart';
+import 'helpers/test_injection_container.dart';
 
 void main() {
+  // Reset and re-initialize GetIt with fake dependencies before every test
+  // so BLoC registrations are available and no real HTTP calls are made.
+  setUp(() async {
+    await GetIt.instance.reset();
+    await setupTestDependencies();
+  });
+
+  // Clean up after every test to avoid singleton leaks between tests.
+  tearDown(() async {
+    await GetIt.instance.reset();
+  });
+
   testWidgets('App should build without errors', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
 
     // Verify that the app renders
     expect(find.byType(MaterialApp), findsOneWidget);
@@ -24,10 +39,10 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verify navigation items exist (looking for navigation icons)
-    expect(find.byIcon(Icons.home), findsOneWidget);
-    expect(find.byIcon(Icons.search), findsWidgets);
-    expect(find.byIcon(Icons.dashboard_customize), findsOneWidget);
-    expect(find.byIcon(Icons.account_circle), findsOneWidget);
+    expect(find.byIcon(Icons.home_outlined), findsOneWidget);
+    expect(find.byIcon(Icons.search_rounded), findsWidgets);
+    expect(find.byIcon(Icons.dashboard_customize_outlined), findsOneWidget);
+    expect(find.byIcon(Icons.account_circle_outlined), findsOneWidget);
   });
 
   testWidgets('Home page should display search bar', (WidgetTester tester) async {
@@ -60,13 +75,20 @@ void main() {
     await tester.pumpAndSettle();
 
     // 3. Go to profile tab (index 3) to log in
-    await tester.tap(find.byIcon(Icons.account_circle));
+    await tester.tap(find.byIcon(Icons.account_circle_outlined));
     await tester.pumpAndSettle();
 
     // 4. Verify we are on the login page and tap "Masuk ke akun IKD"
     expect(find.text('Masuk ke akun Anda'), findsOneWidget);
     await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -300));
     await tester.pumpAndSettle();
+    
+    // Fill out the login form
+    final textFields = find.byType(TextField);
+    await tester.enterText(textFields.at(0), '1234567890123456');
+    await tester.enterText(textFields.at(1), 'password123');
+    await tester.pumpAndSettle();
+
     final buttonFinder = find.text('Masuk ke akun IKD');
     await tester.tap(buttonFinder);
     await tester.pumpAndSettle();
@@ -75,7 +97,7 @@ void main() {
     expect(find.text('Ahmad Andrawan'), findsOneWidget);
 
     // 6. Navigate back to Home tab (index 0) so we can open the drawer
-    await tester.tap(find.byIcon(Icons.home));
+    await tester.tap(find.byIcon(Icons.home_outlined));
     await tester.pumpAndSettle();
 
     // 7. Open the drawer again
@@ -93,7 +115,7 @@ void main() {
     await tester.tap(logoutButton);
     await tester.pumpAndSettle();
 
-    // 10. Verify we are logged out (should be redirected to home tab and drawer closed/open again)
+    // 10. Verify we are logged out
     await tester.tap(find.byIcon(Icons.menu));
     await tester.pumpAndSettle();
     expect(find.text('Profil Anda'), findsNothing);
@@ -113,9 +135,15 @@ void main() {
     // 3. Verify we have switched to the Profile tab and see the login page
     expect(find.text('Masuk ke akun Anda'), findsOneWidget);
 
-    // 4. Tap "Masuk ke akun IKD"
+    // 4. Fill out the form and tap "Masuk ke akun IKD"
     await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -300));
     await tester.pumpAndSettle();
+
+    final textFields = find.byType(TextField);
+    await tester.enterText(textFields.at(0), '1234567890123456');
+    await tester.enterText(textFields.at(1), 'password123');
+    await tester.pumpAndSettle();
+
     await tester.tap(find.text('Masuk ke akun IKD'));
     await tester.pumpAndSettle();
 
