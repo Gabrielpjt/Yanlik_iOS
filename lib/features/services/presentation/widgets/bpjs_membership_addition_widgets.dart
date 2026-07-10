@@ -1209,11 +1209,11 @@ class _GenderOption extends StatelessWidget {
         children: [
           Radio<String>(
             value: value,
+            // ignore: deprecated_member_use
             groupValue: groupValue,
+            // ignore: deprecated_member_use
             onChanged: (selectedValue) {
-              if (selectedValue != null) {
-                onChanged(selectedValue);
-              }
+              if (selectedValue != null) onChanged(selectedValue);
             },
             visualDensity: VisualDensity.compact,
             materialTapTargetSize:

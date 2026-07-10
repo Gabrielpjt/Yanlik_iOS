@@ -49,7 +49,6 @@ class SearchSuccess extends SearchState {
       case SearchFilter.informasiLayanan:
         return informasiLayananResults;
       case SearchFilter.all:
-      default:
         return results;
     }
   }

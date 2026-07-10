@@ -864,7 +864,7 @@ class _ServiceAccessSearchContentState extends State<ServiceAccessSearchContent>
             itemCount: visibleItems.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            separatorBuilder: (_, __) => const SizedBox(height: 16),
+            separatorBuilder: (_, _) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
               return ServiceAccessResultCard(
                 type: config.type,

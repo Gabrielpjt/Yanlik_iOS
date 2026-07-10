@@ -448,7 +448,7 @@ class _ServiceAccessCardConfig {
       facility,
       ['facilityClass', 'class', 'kelas', 'kelas_sarana'],
       ignoredValues: {
-        if (kodeSarana != null) kodeSarana,
+        ?kodeSarana,
       },
     );
 

@@ -250,7 +250,7 @@ class _LoginPageState extends State<LoginPage> {
                                         foregroundColor: Colors.white,
                                         disabledBackgroundColor:
                                         AppColors.brandPrimary
-                                            .withOpacity(0.55),
+                                            .withValues(alpha: 0.55),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                           BorderRadius.circular(8),

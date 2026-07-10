@@ -356,11 +356,11 @@ class _RadioOption extends StatelessWidget {
         children: [
           Radio<String>(
             value: value,
+            // ignore: deprecated_member_use
             groupValue: groupValue,
+            // ignore: deprecated_member_use
             onChanged: (newValue) {
-              if (newValue != null) {
-                onChanged(newValue);
-              }
+              if (newValue != null) onChanged(newValue);
             },
             activeColor: const Color(0xFF111111),
             visualDensity: VisualDensity.compact,

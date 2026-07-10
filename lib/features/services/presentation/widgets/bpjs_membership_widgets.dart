@@ -6,6 +6,7 @@ class BpjsMembershipSearchField extends StatelessWidget {
   final VoidCallback onClear;
 
   const BpjsMembershipSearchField({
+    super.key,
     required this.controller,
     required this.onSearch,
     required this.onClear,
@@ -71,6 +72,7 @@ class BpjsMembershipSortButton extends StatelessWidget {
   final ValueChanged<String> onSelected;
 
   const BpjsMembershipSortButton({
+    super.key,
     required this.selectedValue,
     required this.onSelected,
   });
@@ -130,6 +132,7 @@ class BpjsInformationBanner extends StatelessWidget {
   final VoidCallback onCareCenterTap;
 
   const BpjsInformationBanner({
+    super.key,
     required this.onWhatsappTap,
     required this.onCareCenterTap,
   });
@@ -222,6 +225,7 @@ class BpjsMembershipCard extends StatelessWidget {
   final VoidCallback onCopyNumber;
 
   const BpjsMembershipCard({
+    super.key,
     required this.membership,
     required this.onCopyNumber,
   });

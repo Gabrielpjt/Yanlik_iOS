@@ -144,7 +144,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                               alignment: Alignment.centerLeft,
                               children: <Widget>[
                                 ...previousChildren,
-                                if (currentChild != null) currentChild,
+                                ?currentChild,
                               ],
                             );
                           },

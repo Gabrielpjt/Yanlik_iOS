@@ -210,7 +210,7 @@ class _HomeBenefitSectionState extends State<HomeBenefitSection>
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: _benefits.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        separatorBuilder: (_, _) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
           final b = _benefits[index];
           final benefitName = b['name'] as String;
@@ -220,7 +220,7 @@ class _HomeBenefitSectionState extends State<HomeBenefitSection>
             amount: b['amount'] as String,
             period: b['period'] as String,
             status: b['status'] as String,
-            cairDate: b['cair'] as String?,
+            cairDate: b['cair'],
             onTap: () {
               widget.onBenefitTap?.call(benefitName);
             },
@@ -236,7 +236,7 @@ class _HomeBenefitSectionState extends State<HomeBenefitSection>
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: _documents.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        separatorBuilder: (_, _) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
           final d = _documents[index];
 

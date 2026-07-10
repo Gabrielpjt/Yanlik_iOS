@@ -60,8 +60,8 @@ class _BirthCertificateApplicationPageState
   int _currentStep = 0;
 
   bool _isFamilyCardVerified = false;
-  bool _isMarriageCertificateVerified = true;
-  bool _isBirthLetterVerified = true;
+  final bool _isMarriageCertificateVerified = true;
+  final bool _isBirthLetterVerified = true;
 
   bool _isFatherVerified = true;
   bool _isMotherVerified = false;
@@ -72,10 +72,10 @@ class _BirthCertificateApplicationPageState
   bool _isTermsAccepted = false;
 
   String _selectedGender = 'Laki-laki';
-  String _selectedBirthType = 'Tunggal';
-  String _selectedBirthPlaceType = 'Rumah Sakit / Rumah Bersalin';
+  final String _selectedBirthType = 'Tunggal';
+  final String _selectedBirthPlaceType = 'Rumah Sakit / Rumah Bersalin';
 
-  List<String> _selectedBirthAssistants = [
+  final List<String> _selectedBirthAssistants = [
     'Dokter',
     'Bidan',
   ];

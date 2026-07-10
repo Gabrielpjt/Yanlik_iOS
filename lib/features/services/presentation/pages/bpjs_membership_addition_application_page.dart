@@ -192,12 +192,6 @@ class _BpjsMembershipAdditionApplicationPageState
     );
   }
 
-  void _showParticipantForm() {
-    setState(() {
-      _showNewParticipantForm = true;
-    });
-  }
-
   Future<void> _selectBirthDate() async {
     final selectedDate = await showDatePicker(
       context: context,

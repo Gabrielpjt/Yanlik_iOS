@@ -302,7 +302,7 @@ class ServiceApplicationDropdownField<T> extends StatelessWidget {
         ),
         const SizedBox(height: 7),
         DropdownButtonFormField<T>(
-          value: value,
+          initialValue: value,
           isExpanded: true,
           hint: hintText == null
               ? null

@@ -23,9 +23,9 @@ class SearchRemoteDatasource {
     try {
       final queryParams = <String, dynamic>{
         'q': query,
-        if (module != null) 'module': module,
-        if (page != null) 'page': page,
-        if (limit != null) 'limit': limit,
+        'module': ?module,
+        'page': ?page,
+        'limit': ?limit,
         'pagination': 'true',
       };
 

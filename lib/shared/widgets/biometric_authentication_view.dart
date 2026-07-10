@@ -193,7 +193,7 @@ class _FaceScanPreview extends StatelessWidget {
               Image.asset(
                 faceImageAsset!,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) {
+                errorBuilder: (_, _, _) {
                   return const _FacePlaceholder();
                 },
               )

@@ -96,7 +96,6 @@ class _SearchPageState extends State<SearchPage> {
       case SearchFilter.informasiLayanan:
         return 'informasi';
       case SearchFilter.all:
-      default:
         return 'all';
     }
   }

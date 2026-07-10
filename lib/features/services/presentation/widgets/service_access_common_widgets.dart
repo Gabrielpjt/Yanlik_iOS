@@ -493,7 +493,7 @@ class ServiceAccessInfoTile extends StatelessWidget {
               ],
             ),
           ),
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );

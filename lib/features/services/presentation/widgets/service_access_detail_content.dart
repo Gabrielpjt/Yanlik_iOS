@@ -380,7 +380,7 @@ class _ServiceAccessDetailBody extends StatelessWidget {
       mode: LaunchMode.externalApplication,
     );
 
-    if (!opened) {
+    if (!opened && context.mounted) {
       _showMessage(context, 'Website tidak dapat dibuka.');
     }
   }
